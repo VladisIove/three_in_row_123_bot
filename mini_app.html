@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three in a Row Game</title>
+    <link rel="stylesheet" href="style.css">
+    <style> 
+        /* style.css */
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(10, 50px);
+    grid-template-rows: repeat(10, 50px);
+    gap: 2px;
+    margin: 50px auto;
+    width: fit-content;
+}
+
+.cell {
+    width: 50px;
+    height: 50px;
+    background-color: lightgray;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.cell[data-type="0"] {
+    background-color: #f00; /* Red */
+}
+
+.cell[data-type="1"] {
+    background-color: #0f0; /* Green */
+}
+
+.cell[data-type="2"] {
+    background-color: #00f; /* Blue */
+}
+
+.cell[data-type="3"] {
+    background-color: #ff0; /* Yellow */
+}
+
+.cell[data-type="4"] {
+    background-color: #f0f; /* Purple */
+}
+
+    </style>
+</head>
+<body>
+    <div id="game-board"></div>
+
+    <script> 
+        // script.js
+const gameBoard = document.getElementById('game-board');
+const width = 10;  // 10x10 grid
+const height = 10;
+const objectTypes = 5;  // Five different types of objects
+var grid = [];
+
+// Function to create and populate the grid
+function createBoard() {
+
+    for (let i = 0; i < width * height; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        const randomType = Math.floor(Math.random() * objectTypes);
+        cell.setAttribute('data-type', randomType);
+        gameBoard.appendChild(cell);
+        grid.push(cell);
+    }
+
+    grid.forEach(cell => {
+        console.log(2)
+        cell.addEventListener('click', handleClick);
+    });
+    
+}
+
+
+// Function to check for horizontal and vertical matches
+function checkMatches() {
+    // Check for horizontal matches
+    for (let i = 0; i < grid.length - 2; i++) {
+        const type = grid[i].getAttribute('data-type');
+        if (type && grid[i + 1].getAttribute('data-type') === type &&
+            grid[i + 2].getAttribute('data-type') === type) {
+            // Match found (horizontal)
+            grid[i].setAttribute('data-type', '');
+            grid[i + 1].setAttribute('data-type', '');
+            grid[i + 2].setAttribute('data-type', '');
+        }
+    }
+
+    // Check for vertical matches
+    for (let i = 0; i < grid.length - width * 2; i++) {
+        const type = grid[i].getAttribute('data-type');
+        if (type && grid[i + width].getAttribute('data-type') === type &&
+            grid[i + width * 2].getAttribute('data-type') === type) {
+            // Match found (vertical)
+            grid[i].setAttribute('data-type', '');
+            grid[i + width].setAttribute('data-type', '');
+            grid[i + width * 2].setAttribute('data-type', '');
+        }
+    }
+}
+// Function to drop objects and refill the grid
+function dropAndRefill() {
+    for (let i = 0; i < grid.length - width; i++) {
+        if (grid[i + width].getAttribute('data-type') === '') {
+            grid[i + width].setAttribute('data-type', grid[i].getAttribute('data-type'));
+            grid[i].setAttribute('data-type', '');
+        }
+    }
+
+    // Refill the top row with new objects
+    for (let i = 0; i < width; i++) {
+        if (grid[i].getAttribute('data-type') === '') {
+            const randomType = Math.floor(Math.random() * objectTypes);
+            grid[i].setAttribute('data-type', randomType);
+        }
+    }
+}
+function gameLoop() {
+    checkMatches();
+    dropAndRefill();
+    setTimeout(gameLoop, 500); // Repeat every half second
+}
+
+
+let firstCell = null;
+
+// Add event listeners to all cells
+console.log('foos')
+console.log(grid)
+
+function handleClick(event) {
+    console.log(1)
+    const clickedCell = event.target;
+
+    if (!firstCell) {
+        firstCell = clickedCell;
+        firstCell.classList.add('selected');
+    } else {
+        const secondCell = clickedCell;
+
+        if (isAdjacent(firstCell, secondCell)) {
+            swapObjects(firstCell, secondCell);
+
+            if (checkMatches()) {
+                dropAndRefill();
+            } else {
+                swapObjects(firstCell, secondCell);
+            }
+        }
+
+        firstCell.classList.remove('selected');
+        firstCell = null;
+    }
+}
+
+function isAdjacent(cell1, cell2) {
+    const index1 = Array.from(grid).indexOf(cell1);
+    const index2 = Array.from(grid).indexOf(cell2);
+
+    const isRight = index2 === index1 + 1 && index1 % width !== width - 1;
+    const isLeft = index2 === index1 - 1 && index1 % width !== 0;
+    const isAbove = index2 === index1 - width;
+    const isBelow = index2 === index1 + width;
+
+    return isRight || isLeft || isAbove || isBelow;
+}
+
+function swapObjects(cell1, cell2) {
+    const tempType = cell1.getAttribute('data-type');
+    cell1.setAttribute('data-type', cell2.getAttribute('data-type'));
+    cell2.setAttribute('data-type', tempType);
+}
+
+function checkMatches() {
+    let matchFound = false;
+
+    for (let i = 0; i < grid.length - 2; i++) {
+        const type = grid[i].getAttribute('data-type');
+        if (type && grid[i + 1].getAttribute('data-type') === type &&
+            grid[i + 2].getAttribute('data-type') === type) {
+            grid[i].setAttribute('data-type', '');
+            grid[i + 1].setAttribute('data-type', '');
+            grid[i + 2].setAttribute('data-type', '');
+            matchFound = true;
+        }
+    }
+
+    for (let i = 0; i < grid.length - width * 2; i++) {
+        const type = grid[i].getAttribute('data-type');
+        if (type && grid[i + width].getAttribute('data-type') === type &&
+            grid[i + width * 2].getAttribute('data-type') === type) {
+            grid[i].setAttribute('data-type', '');
+            grid[i + width].setAttribute('data-type', '');
+            grid[i + width * 2].setAttribute('data-type', '');
+            matchFound = true;
+        }
+    }
+
+    return matchFound;
+}
+
+function dropAndRefill() {
+    for (let i = 0; i < grid.length - width; i++) {
+        if (grid[i + width].getAttribute('data-type') === '') {
+            grid[i + width].setAttribute('data-type', grid[i].getAttribute('data-type'));
+            grid[i].setAttribute('data-type', '');
+        }
+    }
+
+    for (let i = 0; i < width; i++) {
+        if (grid[i].getAttribute('data-type') === '') {
+            const randomType = Math.floor(Math.random() * objectTypes);
+            grid[i].setAttribute('data-type', randomType);
+        }
+    }
+}
+
+createBoard();
+gameLoop();
+
+    </script>
+</body>
+</html>
