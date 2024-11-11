@@ -13,7 +13,7 @@ from typing import Any
 bot = settings.TELEGRAM_BOT
 
 class MainPageWebApp(TemplateView):
-    template_name = 'inde1x.html'
+    template_name = 'index.html'
 
 
 class GetOrCreateUser(View):
