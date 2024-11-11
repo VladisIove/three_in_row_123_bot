@@ -39,12 +39,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
     "user_core"
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -131,3 +133,18 @@ TELEGRAM_BOT_TOKEN = "7573355657:AAEk6baXfcUfAFNgWKqMvqGwtnida9_eKkk"
 TELEGRAM_BOT = telebot.TeleBot(TELEGRAM_BOT_TOKEN)
 
 REFFERAL_LINK_TEXT = "https://t.me/three_in_row_123_bot?startapp={}&text=Refferal Link"
+
+CORS_ALLOW_METHODS = (
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+)
+
+CORS_ALLOWED_ORIGINS = [
+    "https://distant-malanie-vvsdfs22-676d8212.koyeb.app",
+    "http://localhost:8080",
+    "http://0.0.0.0:9000",
+]

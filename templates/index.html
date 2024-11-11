@@ -238,7 +238,7 @@ gameLoop();
             'tg_id': 616203321,  // user_data.WebAppUse.id,
             'referral_token': urlParams.get("tgWebAppStartParam")
         }
-        fetch(`http://distant-malanie-vvsdfs22-676d8212.koyeb.app/get_or_create_user?userId=${encodeURIComponent[requestData.]tg_id)}&startApp=${encodeURIComponent(requestData.referral_token)}`, {
+        fetch(`https://distant-malanie-vvsdfs22-676d8212.koyeb.app/get_or_create_user?userId=${encodeURIComponent(requestData.tg_id)}&startApp=${encodeURIComponent(requestData.referral_token)}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
