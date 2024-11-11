@@ -132,7 +132,7 @@ TELEGRAM_BOT_TOKEN = "7573355657:AAEk6baXfcUfAFNgWKqMvqGwtnida9_eKkk"
 
 TELEGRAM_BOT = telebot.TeleBot(TELEGRAM_BOT_TOKEN)
 
-REFFERAL_LINK_TEXT = "https://t.me/three_in_row_123_bot?startapp={}&text=Refferal Link"
+REFFERAL_LINK_TEXT = "https://t.me/three_in_row_123_bot?startapp={}&startApp={}&text=Refferal Link"
 
 CORS_ALLOW_METHODS = (
     "DELETE",

@@ -43,7 +43,7 @@ class GetOrCreateUser(View):
             referral.save()
             user.save()
         user_data = model_to_dict(user)
-        user_data['share_url'] = settings.REFFERAL_LINK_TEXT.format(user.referral_token)
+        user_data['share_url'] = settings.REFFERAL_LINK_TEXT.format(user.referral_token, user.referral_token)
         return user_data
 
     def get(
