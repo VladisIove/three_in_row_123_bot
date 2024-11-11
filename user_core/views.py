@@ -25,8 +25,6 @@ class GetOrCreateUser(View):
         user.save()
         return model_to_dict(user)
         
-        
-    
     def post(
         self, request: http.HttpRequest, *args: Any, **kwargs: Any
     ) -> http.HttpResponse:
