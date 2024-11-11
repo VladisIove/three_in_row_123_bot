@@ -13,7 +13,7 @@ from typing import Any
 bot = settings.TELEGRAM_BOT
 
 class MainPageWebApp(TemplateView):
-    template_name = 'index.html'
+    template_name = 'inde1x.html'
 
 
 class GetOrCreateUser(View):
@@ -25,7 +25,7 @@ class GetOrCreateUser(View):
             user_data = model_to_dict(user)
             user_data['share_url'] = settings.REFFERAL_LINK_TEXT.format(user.referral_token)
             return user_data
-        if referral_token:
+        if referral_token and referral_token != "null":
             referral = TelegramUser.objects.filter(referral_token=referral_token).first()
 
         user = TelegramUser()
