@@ -17,4 +17,4 @@ EXPOSE 5000
 ENV PYTHONUNBUFFERED=1
 
 # Run backend.py when the container launches
-CMD ["python", "backend.py"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
