@@ -25,7 +25,7 @@ class GetOrCreateUser(View):
             user_data = model_to_dict(user)
             user_data['share_url'] = settings.REFFERAL_LINK_TEXT.format(user.referral_token)
             return user_data
-        if referral_token and referral_token != "null":
+        if referral_token and referral_token != "undefined":
             referral = TelegramUser.objects.filter(referral_token=referral_token).first()
         else: 
             referral = None
