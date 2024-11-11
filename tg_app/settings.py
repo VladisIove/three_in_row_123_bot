@@ -143,8 +143,5 @@ CORS_ALLOW_METHODS = (
     "PUT",
 )
 
-CORS_ALLOWED_ORIGINS = [
-    "https://distant-malanie-vvsdfs22-676d8212.koyeb.app",
-    "http://localhost:8080",
-    "http://0.0.0.0:9000",
-]
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
