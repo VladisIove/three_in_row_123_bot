@@ -25,7 +25,8 @@ class GetOrCreateUser(View):
             user_data = model_to_dict(user)
             user_data['share_url'] = settings.REFFERAL_LINK_TEXT.format(user.referral_token)
             return user_data
-        referral = referral_token or TelegramUser.objects.filter(referral_token=referral_token).first()
+        if referral_token:
+            referral = TelegramUser.objects.filter(referral_token=referral_token).first()
 
         user = TelegramUser()
         user.telegram_id = tg_id
@@ -37,8 +38,8 @@ class GetOrCreateUser(View):
             bot.send_message(user.pk, "Some one register by you refferal link")
             referral.balance += 1
             user.balance += 1
-            referral.save(update_fields=['balance'])
-            user.save(update_fields=['balance'])
+            referral.save()
+            user.save()
         user_data = model_to_dict(user)
         user_data['share_url'] = settings.REFFERAL_LINK_TEXT.format(user.referral_token)
         return user_data
