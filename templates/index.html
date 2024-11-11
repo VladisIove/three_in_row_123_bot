@@ -230,7 +230,9 @@ gameLoop();
     <script> 
         let tg = window.Telegram.WebApp; 
         let user_data = tg.initDataUnsafe;
-        
+        const urlParams = new URLSearchParams(window.location.search);
+        console.log('user_data: ', user_data)
+        console.log('urlParams: ', urlParams)
     </script>
 </body>
 </html>
