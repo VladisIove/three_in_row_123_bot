@@ -50,8 +50,8 @@
     </style>
 </head>
 <body>
-    TEST
-    <div id="data-container"> </div>
+    <h1>User Data</h1>
+    <div id="data-container"></div>
     <div id="game-board"></div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -235,10 +235,10 @@ gameLoop();
         console.log('user_data: ', user_data)
         console.log('urlParams: ', urlParams)
         requestData = {
-            'tg_id': 616203321,  // user_data.WebAppUse.id,
+            'tg_id': user_data.WebAppUse.id,
             'referral_token': urlParams.get("tgWebAppStartParam")
         }
-        fetch(`https://distant-malanie-vvsdfs22-676d8212.koyeb.app/get_or_create_user?userId=${encodeURIComponent(requestData.tg_id)}&startApp=${encodeURIComponent(requestData.referral_token)}`, {
+        fetch(`https://distant-malanie-vvsdfs22-676d8212.koyeb.app/get_or_create_user?tg_id=${encodeURIComponent(requestData.tg_id)}&referral_token=${encodeURIComponent(requestData.referral_token)}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -249,11 +249,29 @@ gameLoop();
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
                 }
+
+                
                 return response.json();
             })
             .then((data) => {
                 // Handle the response data
                 console.log("Data fetched successfully:", data);
+                const container = document.getElementById("data-container");
+
+                // Create a new element for the data
+                const dataElement = document.createElement("div");
+                dataElement.classList.add("data-item");
+
+                // Customize the displayed content based on the response structure
+                dataElement.innerHTML = `
+                    <h3>Fetched Data:</h3>
+                    <p><strong>User ID:</strong> ${data.telegram_id}</p>
+                    <p><strong>Share link:</strong> ${data.share_url}</p>
+                    <p><strong>Balance:</strong> ${data.balance}</p>
+                `;
+
+                // Append the new element to the container
+                container.appendChild(dataElement);
             })
             .catch((error) => {
                 console.log('12345')

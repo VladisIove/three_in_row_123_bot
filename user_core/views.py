@@ -29,7 +29,8 @@ class GetOrCreateUser(View):
 
         user = TelegramUser()
         user.telegram_id = tg_id
-        user.referral = referral
+        if isinstance(referral, TelegramUser):
+            user.referral = referral
         user.save()
         user_data = model_to_dict(user)
         if isinstance(referral, TelegramUser):
