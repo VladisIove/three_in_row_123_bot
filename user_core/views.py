@@ -35,7 +35,7 @@ class GetOrCreateUser(View):
         user.save()
         user_data = model_to_dict(user)
         if isinstance(referral, TelegramUser):
-            bot.send_message(616203321, "Some one register by you refferal link")
+            bot.send_message(referral.pk, "Some one register by you refferal link")
             referral.balance += 1
             user.balance += 1
             referral.save()
