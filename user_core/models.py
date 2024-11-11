@@ -13,3 +13,6 @@ class TelegramUser(models.Model):
     class Meta:
         db_table = "telegram_user" 
         ordering = ["telegram_id"]
+
+    def __str__(self) -> str:
+        return str(self.telegram_id)
