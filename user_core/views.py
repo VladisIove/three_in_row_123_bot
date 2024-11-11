@@ -45,5 +45,6 @@ class GetOrCreateUser(View):
     def post(
         self, request: http.HttpRequest, *args: Any, **kwargs: Any
     ) -> http.HttpResponse:
-        data = request.data 
+        data = request.data
+        self.get_or_create(data['tg_id'], data['referral_token'])
         return JsonResponse(data)
