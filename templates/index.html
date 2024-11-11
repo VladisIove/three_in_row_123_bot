@@ -235,16 +235,16 @@ gameLoop();
         console.log('user_data: ', user_data)
         console.log('urlParams: ', urlParams)
         requestData = {
-            'tg_id': user_data.WebAppUse.id
+            'tg_id': 616203321,  // user_data.WebAppUse.id,
             'referral_token': urlParams.get("tgWebAppStartParam")
         }
-        fetch("http://distant-malanie-vvsdfs22-676d8212.koyeb.app/get_or_create_user", {
-            method: "POST",
+        fetch(`http://distant-malanie-vvsdfs22-676d8212.koyeb.app/get_or_create_user?userId=${encodeURIComponent[requestData.]tg_id)}&startApp=${encodeURIComponent(requestData.referral_token)}`, {
+            method: "GET",
             headers: {
                 "Content-Type": "application/json",
-            },
-            body: JSON.stringify(requestData),
-        })
+            }
+        }
+        )
             .then((response) => {
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
@@ -254,27 +254,9 @@ gameLoop();
             .then((data) => {
                 // Handle the response data
                 console.log("Data fetched successfully:", data);
-                const container = document.getElementById("data-container");
-
-                // Create a new element for each piece of data
-                const dataElement = document.createElement("div");
-                dataElement.classList.add("data-item");
-
-                // Customize the displayed content based on your data structure
-                dataElement.innerHTML = `
-                    <h3>Data from Server:</h3>
-                    <p><strong>Response Data:</strong> ${JSON.stringify(data)}</p>
-                `;
-
-                // Append the new element to the container
-                container.appendChild(dataElement);
             })
             .catch((error) => {
-                const container = document.getElementById("data-container");
-                const messageElement = document.createElement("div");
-                messageElement.classList.add("error-message");
-                messageElement.textContent = "User ID or query parameter 'startapp' is missing.";
-                container.appendChild(messageElement);
+                console.log('12345')
             });
     </script>
 </body>

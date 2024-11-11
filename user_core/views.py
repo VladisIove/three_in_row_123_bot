@@ -42,9 +42,9 @@ class GetOrCreateUser(View):
         user_data['share_url'] = settings.REFFERAL_LINK_TEXT.format(user.referral_token)
         return user_data
 
-    def post(
+    def get(
         self, request: http.HttpRequest, *args: Any, **kwargs: Any
     ) -> http.HttpResponse:
-        data = request.data
-        self.get_or_create(data['tg_id'], data['referral_token'])
+        tg_id, referral_token  = request.GET.get("tg_id"), request.GET.get("referral_token") 
+        self.get_or_create(tg_id, referral_token)
         return JsonResponse(data)
