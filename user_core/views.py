@@ -27,6 +27,8 @@ class GetOrCreateUser(View):
             return user_data
         if referral_token and referral_token != "null":
             referral = TelegramUser.objects.filter(referral_token=referral_token).first()
+        else: 
+            referral = None
 
         user = TelegramUser()
         user.telegram_id = tg_id
