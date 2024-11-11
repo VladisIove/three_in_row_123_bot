@@ -1,0 +1,14 @@
+from django.db import models
+
+# Create your models here.
+
+class TelegramUser(models.Model):
+    
+    telegram_id = models.IntegerField(primary_key=True)
+    referral_id = models.ForeignKey(to='self', null=True, blank=True, on_delete=models.SET_NULL) 
+    balance = models.DecimalField(max_digits=10, decimal_places=10) 
+    created = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        db_table = "telegram_user" 
+        ordering = ["telegram_id"]
