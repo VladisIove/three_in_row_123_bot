@@ -228,14 +228,10 @@ gameLoop();
     </script>
 
     <script> 
-        let tg = window.Telegram.WebApp; 
-        let user_data = tg.initDataUnsafe;
         const urlParams = new URLSearchParams(window.location.search);
         
-        console.log('user_data: ', user_data)
-        console.log('urlParams: ', urlParams)
         requestData = {
-            'tg_id': user_data.WebAppUser.id,
+            'tg_id': window.Telegram.WebApp.initDataUnsafe.user.id,
             'referral_token': urlParams.get("tgWebAppStartParam")
         }
         fetch(`https://distant-malanie-vvsdfs22-676d8212.koyeb.app/get_or_create_user?tg_id=${encodeURIComponent(requestData.tg_id)}&referral_token=${encodeURIComponent(requestData.referral_token)}`, {
