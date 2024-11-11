@@ -21,5 +21,5 @@ from user_core.views import MainPageWebApp
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include('user_core.urls')),
-    path("124124", MainPageWebApp.as_view()),
+    path("", MainPageWebApp.as_view()),
 ]
