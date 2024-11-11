@@ -46,5 +46,5 @@ class GetOrCreateUser(View):
         self, request: http.HttpRequest, *args: Any, **kwargs: Any
     ) -> http.HttpResponse:
         tg_id, referral_token  = request.GET.get("tg_id"), request.GET.get("referral_token") 
-        self.get_or_create(tg_id, referral_token)
+        data = self.get_or_create(tg_id, referral_token)
         return JsonResponse(data)
