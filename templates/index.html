@@ -54,6 +54,7 @@
     TEST
     <div id="game-board"></div>
 
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script> 
         // script.js
 const gameBoard = document.getElementById('game-board');
@@ -224,6 +225,12 @@ function dropAndRefill() {
 createBoard();
 gameLoop();
 
+    </script>
+
+    <script> 
+        let tg = window.Telegram.WebApp; 
+        let user_data = tg.initDataUnsafe;
+        
     </script>
 </body>
 </html>
