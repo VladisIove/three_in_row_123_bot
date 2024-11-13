@@ -236,7 +236,7 @@ gameLoop();
             // Construct the Telegram share URL
             const shareUrl = `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`;
 
-            return `<a href="${share_url}">Share</a>`;
+            return `<a href="${shareUrl}">Share</a>`;
           }
 
         const urlParams = new URLSearchParams(window.location.search);
