@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 # Set the working directory in the container
 WORKDIR /app
@@ -17,5 +17,4 @@ EXPOSE 5000
 ENV PYTHONUNBUFFERED=1
 
 # Run backend.py when the container launches
-CMD ["python", "manage.py", "migrate"]
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
