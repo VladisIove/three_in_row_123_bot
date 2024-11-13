@@ -228,6 +228,12 @@ gameLoop();
     </script>
 
     <script> 
+
+        function telegramForwardButton($url, $text = '') {
+            $share_url = 'https://t.me/share/url?url='.rawurlencode($url).'&text='.rawurlencode($text);
+            return "<a href=\"{$share_url}\">Share</a>";
+          }
+
         const urlParams = new URLSearchParams(window.location.search);
         console.log(urlParams.get("tgWebAppStartParam"))
         requestData = {
@@ -262,7 +268,7 @@ gameLoop();
                 dataElement.innerHTML = `
                     <h3>Fetched Data:</h3>
                     <p><strong>User ID:</strong> ${data.telegram_id}</p>
-                    <p><strong>Share link:</strong> <a href="${data.share_url}" target="_blank">${data.share_url}</a></p>
+                    <p><strong>Share link:</strong> ${telegramForwardButton(data.share_url, 'test test')}</a></p>
                     <p><strong>Balance:</strong> ${data.balance}</p>
                 `;
 
