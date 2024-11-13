@@ -229,9 +229,14 @@ gameLoop();
 
     <script> 
 
-        function telegramForwardButton($url, $text = '') {
-            $share_url = 'https://t.me/share/url?url='.rawurlencode($url).'&text='.rawurlencode($text);
-            return "<a href=\"{$share_url}\">Share</a>";
+        function telegramForwardButton(url, text = '') {
+            const encodedUrl = encodeURIComponent(url);
+            const encodedText = encodeURIComponent(text);
+        
+            // Construct the Telegram share URL
+            const shareUrl = `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`;
+
+            return `<a href="${share_url}">Share</a>`;
           }
 
         const urlParams = new URLSearchParams(window.location.search);
