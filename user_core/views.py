@@ -7,14 +7,31 @@ from django.conf import settings
 from django.forms.models import model_to_dict
 
 from user_core.models import TelegramUser
-
+from user_core.integrations.openai.client import ClientOpenAI
 from typing import Any
+from django.http import HttpResponse
+from pydub import AudioSegment
+from pathlib import Path
 
 bot = settings.TELEGRAM_BOT
 
 class MainPageWebApp(TemplateView):
     template_name = 'index.html'
 
+class AIChat(View):
+    @staticmethod
+    def save_to_mp3(bytes_io_object, output_path):
+        bytes_io_object.seek(0)
+
+        # Open the file in binary write mode and save the content
+        with open(output_path, "wb") as f:
+            f.write(bytes_io_object.read())
+            
+        
+    def post(self, request: http.HttpRequest):
+        promt = request.POST.get('promt')
+        self.save_to_mp3(request.FILES['audioFile'], 'input.mp3')
+        return HttpResponse(ClientOpenAI().speech_to_speech_chat(Path(__file__).parent.parent / 'input.mp3', promt))
 
 class GetOrCreateUser(View):
 

@@ -48,7 +48,7 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
+    # "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -145,3 +145,5 @@ CORS_ALLOW_METHODS = (
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+
+OPENAI_API_KEY = "sk-8_9VpqG3vrlEWehyju2ud4E0Ajo2WHDFo22ILp-o64T3BlbkFJ2J1RwxAccWb-5Pit5KMC93BB_75sSq64q2FrTLN1oA"
