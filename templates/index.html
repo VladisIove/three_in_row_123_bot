@@ -71,6 +71,7 @@
         let mediaRecorder;
         let recordedChunks = [];
         let blob;
+        let cache_key = '';
         const startRecordingButton = document.getElementById('startRecording');
         const stopRecordingButton = document.getElementById('stopRecording');
         const audioPlayback = document.getElementById('audio-playback');
@@ -109,11 +110,11 @@
             console.log(recordedChunks)
             const userBlob = new Blob(recordedChunks, { type: 'audio/mp3' });
             const formData = new FormData();
-            formData.append('audioFile', userBlob, 'recording.mp3');
+            formData.append('audioFile', new Blob(recordedChunks, { type: 'audio/mp3' }), 'recording.mp3');
             formData.append('promt', document.getElementById('textInput').value);
+            formData.append('cache_key', cache_key);
 
             // Add user's input to chat
-            console.log(URL.createObjectURL(userBlob))
             addChatItem('You','', URL.createObjectURL(userBlob));
 
             // Send to backend
@@ -121,7 +122,7 @@
                 method: 'POST',
                 body: formData
             });
-            console.log(response)
+            cache_key = response.headers.get('X-CACHE-KEY')
             const reader = response.body.getReader();
             const chunks = [];
             let done = false;

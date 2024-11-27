@@ -9,9 +9,12 @@ from django.forms.models import model_to_dict
 from user_core.models import TelegramUser
 from user_core.integrations.openai.client import ClientOpenAI
 from typing import Any
-from django.http import HttpResponse
-from pydub import AudioSegment
+from django.http import HttpResponse, JsonResponse
 from pathlib import Path
+import base64 
+from django.core.cache import cache
+from uuid import uuid4
+from pydub import AudioSegment
 
 bot = settings.TELEGRAM_BOT
 
@@ -26,12 +29,21 @@ class AIChat(View):
         # Open the file in binary write mode and save the content
         with open(output_path, "wb") as f:
             f.write(bytes_io_object.read())
-            
+
+        AudioSegment.from_file(f.name, "mp4").export('input.ogg', format='ogg')
         
     def post(self, request: http.HttpRequest):
         promt = request.POST.get('promt')
+        cache_key = request.POST.get('cache_key')
+        messages = cache.get(cache_key)
         self.save_to_mp3(request.FILES['audioFile'], 'input.mp3')
-        return HttpResponse(ClientOpenAI().speech_to_speech_chat(Path(__file__).parent.parent / 'input.mp3', promt))
+        audio, messages = ClientOpenAI().speech_to_speech_chat(Path(__file__).parent.parent / 'input.ogg', promt, messages)
+        if not cache_key:
+            cache_key = str(uuid4())
+        cache.set(cache_key, messages, timeout=60*60)  # Timeout in seconds
+        response = HttpResponse(audio)
+        response['X-CACHE-KEY'] = cache_key
+        return response
 
 class GetOrCreateUser(View):
 
