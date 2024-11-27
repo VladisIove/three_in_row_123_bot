@@ -32,7 +32,11 @@ class AIChat(View):
         try:
             audio = AudioSegment.from_file(f.name, "mp4")
         except:
-            audio =  AudioSegment.from_file(f.name, "mp3")
+            try:
+                audio =  AudioSegment.from_file(f.name, "mp3")
+            except: 
+                audio =  AudioSegment.from_file(f.name)
+                
         audio.export('input.ogg', format='ogg')
         
     def post(self, request: http.HttpRequest):
