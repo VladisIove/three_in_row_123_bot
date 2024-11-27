@@ -29,8 +29,11 @@ class AIChat(View):
         # Open the file in binary write mode and save the content
         with open(output_path, "wb") as f:
             f.write(bytes_io_object.read())
-
-        AudioSegment.from_file(f.name, "mp4").export('input.ogg', format='ogg')
+        try:
+            audio = AudioSegment.from_file(f.name, "mp4")
+        except:
+            audio =  AudioSegment.from_file(f.name, "mp3")
+        audio.export('input.ogg', format='ogg')
         
     def post(self, request: http.HttpRequest):
         promt = request.POST.get('promt')
