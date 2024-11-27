@@ -1,4 +1,5 @@
 # Use an official Python runtime as a parent image
+FROM linuxserver/ffmpeg
 FROM python:3.12-slim
 
 # Set the working directory in the container
