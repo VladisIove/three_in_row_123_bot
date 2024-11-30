@@ -46,12 +46,15 @@
 .cell[data-type="4"] {
     background-color: #f0f; /* Purple */
 }
-
+.scrollable-div {
+    max-width: 200px;
+    overflow: auto; /* Adds scroll bars when content overflows */
+}
     </style>
 </head>
 <body>
     <h1>Audio Chat</h1>
-    <div class="chat-container" id="chatContainer">
+    <div class="chat-container" id="chatContainer" class="scrollable-div">
         <!-- Chat items will be dynamically added here -->
     </div>
 
