@@ -1,0 +1,71 @@
+<div id='feedback' style="display: none;">
+    <div id="finish-conversation" class="finish-main-text main-text">Your session has ended</div>
+    <div id="finish-conversation-sub-text" class=" main-text finis-sub-text"> Please rate how the session went</div>
+    <div class="stars" id="stars">
+        <span class="star" data-value="1"></span>
+        <span class="star" data-value="2"></span>
+        <span class="star" data-value="3"></span>
+        <span class="star" data-value="4"></span>
+        <span class="star" data-value="5"></span>
+    </div>      
+    <textarea id="feedback-form" class='text-area' placeholder="Leave a comment, please"></textarea>
+    <div class='btn send-feedback' oncLick="sendFeedback()">Send feedback</div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const starsContainer = document.getElementById("stars");
+        const stars = starsContainer.querySelectorAll(".star");
+    
+        let currentRating = 0; // To store the selected rating
+    
+        // Highlight stars up to a given index
+        function highlightStars(index) {
+          stars.forEach((star, idx) => {
+
+            star.classList.toggle("selected", idx <= index);
+            if (idx <= index){
+                star.classList.add("star-active");
+            }else{
+                star.classList.remove("star-active");
+
+            }
+          });
+        }
+    
+        // Reset stars based on the current rating
+        function resetStars() {
+          highlightStars(currentRating - 1);
+        }
+    
+        // Add hover effect
+        stars.forEach((star, index) => {
+          star.addEventListener("mouseover", () => highlightStars(index));
+    
+          star.addEventListener("mouseout", () => {
+            resetStars(); // Reset to the current rating
+          });
+    
+          // Set rating on click
+          star.addEventListener("click", () => {
+            currentRating = index + 1; // Update the rating value
+            resetStars();
+            console.log(`You rated: ${currentRating} stars`);
+          });
+        });
+    
+        // Initialize with a default rating if needed
+        // Uncomment the line below to set a default rating (e.g., 3 stars)
+        // currentRating = 3; resetStars();
+      }); 
+
+      const sendFeedback = () => {
+
+        const feedback = document.getElementById('feedback');
+        const body = document.getElementById('body');
+
+        feedback.style.display = 'none';
+        body.style.display = 'flex';
+      }
+
+</script>

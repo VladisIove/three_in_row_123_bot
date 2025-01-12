@@ -1,0 +1,56 @@
+@startuml
+
+
+object user {
+  id = "int"
+  email = "str"
+  password = "str" 
+}
+
+
+object screener_question {
+  id = "int"
+  question = "str"
+  tag = "slug"
+  type = "enum" 
+  hide = "bool" 
+}
+
+object screener_choices { 
+   id = "int"
+   choice = "str" 
+   screener_question_id = "int"
+}
+
+object screener_answer { 
+   id = "int"
+   screener_question_id = "int"
+   user_id = "int" 
+   answer = "str"
+} 
+
+object ai_psychological_session { 
+   id = "int"
+   user_id = "str"
+   system_context_id = "str"
+   chat_log = "json" 
+   summary = "str"
+   rate = "enum"
+   feedback = "str"
+}
+
+object ai_system_context { 
+   id = "int"
+   user_id = "int" 
+   context = "str"
+}
+
+user }o-- ai_psychological_session
+user }|-- screener_answer
+
+screener_question }o-- screener_answer
+screener_question }o-- screener_choices
+
+ai_system_context }o-- ai_psychological_session
+
+@enduml

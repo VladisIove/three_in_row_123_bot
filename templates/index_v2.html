@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>thr</title>
+    <link rel="stylesheet" href="style.css">
+    <style> 
+        /* style.css */
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(10, 50px);
+    grid-template-rows: repeat(10, 50px);
+    gap: 2px;
+    margin: 50px auto;
+    width: fit-content;
+}
+
+.cell {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.cell[data-type="0"] {
+    background-color: #f00; /* Red */
+}
+
+.cell[data-type="1"] {
+    background-color: #0f0; /* Green */
+}
+
+.cell[data-type="2"] {
+    background-color: #00f; /* Blue */
+}
+
+.cell[data-type="3"] {
+    background-color: #ff0; /* Yellow */
+}
+
+.cell[data-type="4"] {
+    background-color: #f0f; /* Purple */
+}
+.scrollable-div {
+    max-width: 200px;
+    overflow: auto; /* Adds scroll bars when content overflows */
+}
+    </style>
+</head>
+<body>
+    <h1>Audio Chat</h1>
+    <div class="chat-container" id="chatContainer" class="scrollable-div">
+        <!-- Chat items will be dynamically added here -->
+    </div>
+
+
+    <form id="voiceForm">
+        <label for="textInput">Enter Text:</label><br>
+        <textarea id="textInput" name="textInput" rows="4" cols="50"></textarea><br><br>
+
+        <label for="audioRecording">Record Your Voice:</label><br>
+        <button type="button" id="startRecording">Start Recording</button>
+        <button type="button" id="stopRecording" disabled>Stop Recording</button>
+
+        <button type="submit">Send</button>
+    </form>
+
+    <script>
+        let mediaRecorder;
+        let recordedChunks = [];
+        let blob;
+        let cache_key = '';
+        const startRecordingButton = document.getElementById('startRecording');
+        const stopRecordingButton = document.getElementById('stopRecording');
+        const audioPlayback = document.getElementById('audio-playback');
+        const chatContainer = document.getElementById('chatContainer');
+
+        // Start recording audio
+        startRecordingButton.addEventListener('click', async () => {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorder.ondataavailable = event => {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+
+            mediaRecorder.onstop = () => {};
+
+            mediaRecorder.start();
+            startRecordingButton.disabled = true;
+            stopRecordingButton.disabled = false;
+        });
+
+        // Stop recording audio
+        stopRecordingButton.addEventListener('click', () => {
+            mediaRecorder.stop();
+            startRecordingButton.disabled = false;
+            stopRecordingButton.disabled = true;
+        });
+
+        // Handle form submission
+        document.getElementById('voiceForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            // Prepare user audio
+            console.log(recordedChunks)
+            const userBlob = new Blob(recordedChunks, { type: 'audio/mp3' });
+            const formData = new FormData();
+            formData.append('audioFile', new Blob(recordedChunks, { type: 'audio/mp3' }), 'recording.mp3');
+            formData.append('promt', document.getElementById('textInput').value);
+            formData.append('cache_key', cache_key);
+
+            // Add user's input to chat
+            addChatItem('You','', URL.createObjectURL(userBlob));
+
+            // Send to backend
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                body: formData
+            });
+            cache_key = response.headers.get('X-CACHE-KEY')
+            const reader = response.body.getReader();
+            const chunks = [];
+            let done = false;
+
+            while (!done) {
+                const { value, done: streamDone } = await reader.read();
+                if (value) {
+                    chunks.push(value); // Accumulate chunks
+                }
+                done = streamDone;
+            }
+
+            // Handle backend response
+            const responseBlob = new Blob(chunks, { type: 'audio/mp3' });
+            const responseUrl = URL.createObjectURL(responseBlob);
+
+            // Add backend response to chat
+            addChatItem('Bot', null, responseUrl);
+
+            recordedChunks = [];
+        });
+
+        function addChatItem(sender, text, audioUrl) {
+            const chatItem = document.createElement('div');
+            chatItem.className = 'chat-item';
+
+            if (text) {
+                const textLabel = document.createElement('label');
+                textLabel.textContent = `${sender}: `;
+                chatItem.appendChild(textLabel);
+                chatItem.appendChild(document.createTextNode(text));
+            }
+
+            if (audioUrl) {
+                const audioElement = document.createElement('audio');
+                audioElement.controls = true;
+                audioElement.src = audioUrl;
+                chatItem.appendChild(audioElement);
+            }
+
+            chatContainer.appendChild(chatItem);
+            chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll to the latest message
+        }
+    </script>
+
+    {% comment %} <script> 
+
+        function telegramForwardButton(url, text = '') {
+            const encodedUrl = encodeURIComponent(url);
+            const encodedText = encodeURIComponent(text);
+        
+            // Construct the Telegram share URL
+            const shareUrl = `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`;
+
+            return `<a href="${shareUrl}">Share</a>`;
+          }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        console.log(urlParams.get("tgWebAppStartParam"))
+        requestData = {
+            'tg_id': window.Telegram.WebApp.initDataUnsafe.user.id,
+            'referral_token': window.Telegram.WebApp.initDataUnsafe.start_param
+        }
+        fetch(`https://distant-malanie-vvsdfs22-676d8212.koyeb.app/get_or_create_user?tg_id=${encodeURIComponent(requestData.tg_id)}&referral_token=${encodeURIComponent(requestData.referral_token)}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        }
+        )
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+
+                
+                return response.json();
+            })
+            .then((data) => {
+                // Handle the response data
+                console.log("Data fetched successfully:", data);
+                const container = document.getElementById("data-container");
+
+                // Create a new element for the data
+                const dataElement = document.createElement("div");
+                dataElement.classList.add("data-item");
+
+                // Customize the displayed content based on the response structure
+                dataElement.innerHTML = `
+                    <h3>Fetched Data:</h3>
+                    <p><strong>User ID:</strong> ${data.telegram_id}</p>
+                    <p><strong>Share link:</strong> ${telegramForwardButton(data.share_url, 'test test')}</a></p>
+                    <p><strong>Balance:</strong> ${data.balance}</p>
+                `;
+
+                // Append the new element to the container
+                container.appendChild(dataElement);
+            })
+            .catch((error) => {
+                console.log('12345')
+            });
+    </script> {% endcomment %}
+</body>
+</html>

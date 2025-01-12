@@ -5,228 +5,349 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>thr</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <style> 
-        /* style.css */
-#game-board {
-    display: grid;
-    grid-template-columns: repeat(10, 50px);
-    grid-template-rows: repeat(10, 50px);
-    gap: 2px;
-    margin: 50px auto;
-    width: fit-content;
-}
 
-.cell {
-    width: 50px;
-    height: 50px;
-    border: 1px solid #ccc;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
-    cursor: pointer;
-}
+        html{       
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 1rem;
+            line-height: 1.5rem; 
+        }
 
-.cell[data-type="0"] {
-    background-color: #f00; /* Red */
-}
+        .btn { 
+            box-sizing: border-box;
+        
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.75rem 3.75rem;
+            gap: 0.625rem;
+        
+            
+            background: linear-gradient(90deg, rgba(213, 234, 247, 0.5) 0%, rgba(190, 225, 247, 0.5) 100%);
+            border: 1px solid #3486BB;
+            box-shadow: 0px 0px 20px rgba(52, 134, 187, 0.2), inset 0px 0px 5px #5DB3EB;
+            border-radius: 100px;
+                
 
-.cell[data-type="1"] {
-    background-color: #0f0; /* Green */
-}
+            height: 1.5rem;
+            
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 1rem;
+            line-height: 1.5rem;
+            color: #3486BB;
+            cursor: pointer;
 
-.cell[data-type="2"] {
-    background-color: #00f; /* Blue */
-}
+        }
+     
+        .btn:hover{
+            background: linear-gradient(90deg, rgba(150, 202, 235, 0.5) 0%, rgba(117, 188, 234, 0.5) 100%);
+            box-shadow: 0px 0px 20px rgba(52, 134, 187, 0.2), inset 0px 0px 5px #5DB3EB;
+        }
 
-.cell[data-type="3"] {
-    background-color: #ff0; /* Yellow */
-}
+        .btn:active {
+            background: linear-gradient(90deg, #96CAEB 0%, #75BCEA 100%);
+            box-shadow: 0px 0px 20px rgba(52, 134, 187, 0.2), inset 0px 0px 5px #5DB3EB;
+            border-radius: 100px;
+            color: #FFFFFF;
+        }
 
-.cell[data-type="4"] {
-    background-color: #f0f; /* Purple */
-}
-.scrollable-div {
-    max-width: 200px;
-    overflow: auto; /* Adds scroll bars when content overflows */
-}
+        
+        .header {
+            display: flex;
+            justify-content: flex-start;
+            /* adjustment */
+        }
+
+        .logo {
+            flex: 0 1 auto;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+
+            width: 4rem;
+            height: 1.875rem;
+
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 600;
+            font-size: 1.25rem;
+            line-height: 1.875rem;
+            /* identical to box height */
+            text-transform: capitalize;
+            color: #113851;
+            display: flex;
+            align-items: center;
+
+        }
+
+        .timer{
+            flex: 0 1 auto;
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            width: 103px;
+            height: 24px;
+            margin-left: auto
+        }
+        .used-time{
+            width: 10px;
+            height: 24px;
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 24px;
+            /* identical to box height */
+
+            color: #113851;
+            margin-left: 0.01rem
+
+
+        }
+        .total-time{
+            width: 56px;
+            height: 24px;
+            
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 24px;
+            /* identical to box height */
+            
+            color: rgba(17, 56, 81, 0.7);
+            
+            
+            
+        }
+        .border-time{
+            width: 9px;
+            height: 24px;
+            
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 24px;
+            /* identical to box height */
+            
+            color: #113851;            
+        }
+        .i-clock{
+            width: 24px;
+            height: 24px;
+        }
+        .i-clock-svg{
+            left: 12.5%;
+            right: 12.5%;
+            top: 12.5%;
+            bottom: 12.5%;
+            
+        }
+
+        .body{
+            display: flex;
+            flex-direction: column;
+        }
+
+        .opora{
+            margin: 0.5rem auto;
+            height: 45rem;
+            width: 100%;
+        }
+
+        .main-text{
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 22px;
+            line-height: 140%;
+            text-align: center;
+            margin: 0 auto;
+            color: #113851;
+        }
+
+        .start-session{
+            margin: 0.5rem auto;
+            width: 1.rem;
+        }
+
+        .btn-start-converstation{
+            width: 94px;
+            height: 94px;
+            box-sizing: border-box;
+            background: linear-gradient(90deg, rgba(159, 215, 172, 0.5) 0%, rgba(102, 185, 121, 0.5) 100%);
+            box-shadow: 0px 0px 20px rgba(102, 185, 121, 0.2), inset 0px 0px 5px #66B979;
+            border-radius: 100px;
+            margin: 0 auto;
+            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+    
+        }
+
+        .btn-start-converstation:hover{
+            background: linear-gradient(180deg, rgba(159, 215, 172, 0.6) 0%, rgba(102, 185, 121, 0.6) 100%);
+            box-shadow: 0px 0px 20px rgba(102, 185, 121, 0.2), inset 0px 0px 5px #66B979;
+            border-radius: 100px;
+        }
+
+        .i-start-micro{
+            width: 54px;
+            height: 54px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn-finish-conversation{
+
+            box-sizing: border-box;
+            
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            align-items: flex-start;
+            padding: 16px;
+            gap: 10px;
+            
+            position: relative;
+            width: 44px;
+            height: 44px;
+            
+            border: 2px solid #889BA8;
+            border-radius: 100px;
+            margin: 0.5rem auto;
+            color: #889BA8;
+            cursor: pointer;
+        }
+
+        .btn-finish-conversation:hover{
+            border: 2px solid #587485;
+            color: #587485;
+        }    
+
+        .btn-finish-conversation:hover{
+            border: 2px solid #113851;
+            color: #113851;
+        }    
+
+        .btn-pause-converstation{
+            width: 94px;
+            height: 94px;
+            box-sizing: border-box;
+            background: linear-gradient(180deg, rgba(247, 213, 213, 0.5) 0%, rgba(247, 190, 190, 0.5) 100%);
+            box-shadow: 0px 0px 20px rgba(187, 52, 52, 0.2), inset 0px 0px 5px #EB5D5D;
+            border-radius: 100px;
+            border-radius: 100px;
+            margin: 0 auto;
+            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .btn-pause-converstation:hover{
+            background: linear-gradient(180deg, rgba(247, 213, 213, 0.7) 0%, rgba(247, 190, 190, 0.7) 100%);
+            box-shadow: 0px 0px 20px rgba(187, 52, 52, 0.2), inset 0px 0px 5px #EB5D5D;
+        }
+
+        #feedback{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .finish-main-text{
+            margin-top: 2rem !important;
+            font-size: 28px !important;
+        }
+        
+        #finish-conversation-sub-text{ 
+            line-height: 24px;
+            color: #113851;
+            font-size: 16px !important ;
+        }
+ 
+
+        .stars{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .star{
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(180deg, #D5EAF7 0%, #BEE1F7 100%);
+            box-shadow: 0px 0px 20px rgba(52, 134, 187, 0.2), inset 0px 0px 5px #5DB3EB;
+            border-radius: 2px;
+            clip-path: polygon(50% 0,
+            calc(50%*(1 + sin(.4turn))) calc(50%*(1 - cos(.4turn))),
+            calc(50%*(1 - sin(.2turn))) calc(50%*(1 - cos(.2turn))),
+            calc(50%*(1 + sin(.2turn))) calc(50%*(1 - cos(.2turn))),
+            calc(50%*(1 - sin(.4turn))) calc(50%*(1 - cos(.4turn))) 
+           ); 
+
+        }
+
+        .star:hover{
+            background: linear-gradient(180deg, rgba(150, 202, 235, 0.7) 0%, rgba(117, 188, 234, 0.7) 100%);
+            box-shadow: 0px 0px 20px rgba(52, 134, 187, 0.2), inset 0px 0px 5px #5DB3EB;
+            border-radius: 2px;                
+        }
+
+
+        .star-active{
+            background: linear-gradient(180deg, #96CAEB 0%, #75BCEA 100%);
+            box-shadow: 0px 0px 20px rgba(52, 134, 187, 0.2), inset 0px 0px 5px #5DB3EB;
+            border-radius: 2px;
+        }
+
+        .text-area{
+            box-sizing: border-box;
+            width: 24rem;
+            height: 160px;
+            margin: 1rem auto;
+            background: linear-gradient(90deg, rgba(213, 234, 247, 0.5) 0%, rgba(190, 225, 247, 0.5) 100%);
+            box-shadow: 0px 0px 20px rgba(52, 134, 187, 0.2), inset 0px 0px 5px #5DB3EB;
+            border-radius: 20px;
+            resize: none;
+            outline: none;
+            padding: 1rem;
+            color: #113851;
+        }
+
+        textarea::placeholder {
+            color: color: rgba(93, 179, 235, 0.5);;
+        }
+
+        
+
+        .send-feedback{
+            width: 24rem;
+        }
+
     </style>
 </head>
 <body>
-    <h1>Audio Chat</h1>
-    <div class="chat-container" id="chatContainer" class="scrollable-div">
-        <!-- Chat items will be dynamically added here -->
-    </div>
-
-
-    <form id="voiceForm">
-        <label for="textInput">Enter Text:</label><br>
-        <textarea id="textInput" name="textInput" rows="4" cols="50"></textarea><br><br>
-
-        <label for="audioRecording">Record Your Voice:</label><br>
-        <button type="button" id="startRecording">Start Recording</button>
-        <button type="button" id="stopRecording" disabled>Stop Recording</button>
-
-        <button type="submit">Send</button>
-    </form>
-
-    <script>
-        let mediaRecorder;
-        let recordedChunks = [];
-        let blob;
-        let cache_key = '';
-        const startRecordingButton = document.getElementById('startRecording');
-        const stopRecordingButton = document.getElementById('stopRecording');
-        const audioPlayback = document.getElementById('audio-playback');
-        const chatContainer = document.getElementById('chatContainer');
-
-        // Start recording audio
-        startRecordingButton.addEventListener('click', async () => {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream);
-
-            mediaRecorder.ondataavailable = event => {
-                if (event.data.size > 0) {
-                    recordedChunks.push(event.data);
-                }
-            };
-
-            mediaRecorder.onstop = () => {};
-
-            mediaRecorder.start();
-            startRecordingButton.disabled = true;
-            stopRecordingButton.disabled = false;
-        });
-
-        // Stop recording audio
-        stopRecordingButton.addEventListener('click', () => {
-            mediaRecorder.stop();
-            startRecordingButton.disabled = false;
-            stopRecordingButton.disabled = true;
-        });
-
-        // Handle form submission
-        document.getElementById('voiceForm').addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            // Prepare user audio
-            console.log(recordedChunks)
-            const userBlob = new Blob(recordedChunks, { type: 'audio/mp3' });
-            const formData = new FormData();
-            formData.append('audioFile', new Blob(recordedChunks, { type: 'audio/mp3' }), 'recording.mp3');
-            formData.append('promt', document.getElementById('textInput').value);
-            formData.append('cache_key', cache_key);
-
-            // Add user's input to chat
-            addChatItem('You','', URL.createObjectURL(userBlob));
-
-            // Send to backend
-            const response = await fetch('/api/chat', {
-                method: 'POST',
-                body: formData
-            });
-            cache_key = response.headers.get('X-CACHE-KEY')
-            const reader = response.body.getReader();
-            const chunks = [];
-            let done = false;
-
-            while (!done) {
-                const { value, done: streamDone } = await reader.read();
-                if (value) {
-                    chunks.push(value); // Accumulate chunks
-                }
-                done = streamDone;
-            }
-
-            // Handle backend response
-            const responseBlob = new Blob(chunks, { type: 'audio/mp3' });
-            const responseUrl = URL.createObjectURL(responseBlob);
-
-            // Add backend response to chat
-            addChatItem('Bot', null, responseUrl);
-
-            recordedChunks = [];
-        });
-
-        function addChatItem(sender, text, audioUrl) {
-            const chatItem = document.createElement('div');
-            chatItem.className = 'chat-item';
-
-            if (text) {
-                const textLabel = document.createElement('label');
-                textLabel.textContent = `${sender}: `;
-                chatItem.appendChild(textLabel);
-                chatItem.appendChild(document.createTextNode(text));
-            }
-
-            if (audioUrl) {
-                const audioElement = document.createElement('audio');
-                audioElement.controls = true;
-                audioElement.src = audioUrl;
-                chatItem.appendChild(audioElement);
-            }
-
-            chatContainer.appendChild(chatItem);
-            chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll to the latest message
-        }
-    </script>
-
-    {% comment %} <script> 
-
-        function telegramForwardButton(url, text = '') {
-            const encodedUrl = encodeURIComponent(url);
-            const encodedText = encodeURIComponent(text);
-        
-            // Construct the Telegram share URL
-            const shareUrl = `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`;
-
-            return `<a href="${shareUrl}">Share</a>`;
-          }
-
-        const urlParams = new URLSearchParams(window.location.search);
-        console.log(urlParams.get("tgWebAppStartParam"))
-        requestData = {
-            'tg_id': window.Telegram.WebApp.initDataUnsafe.user.id,
-            'referral_token': window.Telegram.WebApp.initDataUnsafe.start_param
-        }
-        fetch(`https://distant-malanie-vvsdfs22-676d8212.koyeb.app/get_or_create_user?tg_id=${encodeURIComponent(requestData.tg_id)}&referral_token=${encodeURIComponent(requestData.referral_token)}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        }
-        )
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-
-                
-                return response.json();
-            })
-            .then((data) => {
-                // Handle the response data
-                console.log("Data fetched successfully:", data);
-                const container = document.getElementById("data-container");
-
-                // Create a new element for the data
-                const dataElement = document.createElement("div");
-                dataElement.classList.add("data-item");
-
-                // Customize the displayed content based on the response structure
-                dataElement.innerHTML = `
-                    <h3>Fetched Data:</h3>
-                    <p><strong>User ID:</strong> ${data.telegram_id}</p>
-                    <p><strong>Share link:</strong> ${telegramForwardButton(data.share_url, 'test test')}</a></p>
-                    <p><strong>Balance:</strong> ${data.balance}</p>
-                `;
-
-                // Append the new element to the container
-                container.appendChild(dataElement);
-            })
-            .catch((error) => {
-                console.log('12345')
-            });
-    </script> {% endcomment %}
+    {% include "header.html" %}
+    {% include "conversation.html" %}
+    {% include "feedback.html" %}
 </body>
 </html>
+

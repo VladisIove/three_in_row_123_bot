@@ -1,0 +1,101 @@
+<div id="body" class="body"> 
+    {% include "opora.html" %}
+    <div id="greeting" class="main-text">Take a deep breath and start when you're ready.</div>
+    <div id="start-session" class="btn start-session" oncLick="startSession()">
+        Start session
+    </div> 
+
+    <div id="start-conversation" class="main-text" style="display: none;">Hey, how's it going?</div>
+    
+    <div id="btn-start-converstation" class="btn-start-converstation" style="display: none;" oncLick="startSay()">
+        <svg id="i-start-conversation" width="40" height="54" viewBox="0 0 40 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 51.75V45M20 45C15.2261 45 10.6477 43.1036 7.27208 39.7279C3.89642 36.3523 2 31.7739 2 27M20 45C24.7739 45 29.3523 43.1036 32.7279 39.7279C36.1036 36.3523 38 31.7739 38 27M20 38.25C13.8125 38.25 8.75 33.363 8.75 27.387V13.113C8.75 7.137 13.8125 2.25 20 2.25C26.1875 2.25 31.25 7.137 31.25 13.113V27.387C31.25 33.363 26.1875 38.25 20 38.25Z" stroke="url(#paint0_linear_581_199)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+            <linearGradient id="paint0_linear_581_199" x1="20" y1="2.25" x2="20" y2="51.75" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#8ECB9C"/>
+            <stop offset="1" stop-color="#54A967"/>
+            </linearGradient>
+            </defs>
+            </svg>
+    </div> 
+
+    <div id="btn-pause-converstation" class="btn-pause-converstation" style="display: none;" oncLick="finishSay()">
+        <svg id="i-finish-conversation" width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M27 51.75V45M27 45C22.2261 45 17.6477 43.1036 14.2721 39.7279C10.8964 36.3523 9 31.7739 9 27M27 45C31.7739 45 36.3523 43.1036 39.7279 39.7279C43.1036 36.3523 45 31.7739 45 27M27 38.25C20.8125 38.25 15.75 33.363 15.75 27.387V13.113C15.75 7.137 20.8125 2.25 27 2.25C33.1875 2.25 38.25 7.137 38.25 13.113V27.387C38.25 33.363 33.1875 38.25 27 38.25Z" stroke="url(#paint0_linear_597_25)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 2L51 52" stroke="url(#paint1_linear_597_25)" stroke-width="3" stroke-linecap="round"/>
+            <defs>
+            <linearGradient id="paint0_linear_597_25" x1="27" y1="2.25" x2="27" y2="51.75" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#EB9696"/>
+            <stop offset="1" stop-color="#EA7575"/>
+            </linearGradient>
+            <linearGradient id="paint1_linear_597_25" x1="26.5" y1="2" x2="26.5" y2="52" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#EB9696"/>
+            <stop offset="1" stop-color="#EA7575"/>
+            </linearGradient>
+            </defs>
+            </svg>
+    </div> 
+
+    <div id="btn-finish-conversation" class="btn-finish-conversation" style="display: none;" oncLick="finishConversation()">X</div> 
+
+</div>
+
+<script>
+    const startSession = () => {
+
+        const startSessionBtn = document.getElementById('start-session');
+        const greetingText = document.getElementById('greeting');
+
+        
+        const startConversation = document.getElementById('start-conversation');
+        const startConversationBtn = document.getElementById('btn-start-converstation');
+        const finishConversationBtn = document.getElementById('btn-finish-conversation');
+
+        startSessionBtn.style.display = 'none';
+        greetingText.style.display = 'none';
+        
+        startConversation.style.display = 'block';
+        startConversationBtn.style.display = 'flex';
+        finishConversationBtn.style.display = 'flex';
+    }
+
+    const startSay = () => {
+        
+        const startConversationBtn = document.getElementById('btn-start-converstation');
+        const pauseConversationBtn = document.getElementById('btn-pause-converstation');
+
+        startConversationBtn.style.display = 'none';            
+        pauseConversationBtn.style.display = 'flex';
+    }
+
+    const finishSay = () => {
+        const startConversationBtn = document.getElementById('btn-start-converstation');
+        const pauseConversationBtn = document.getElementById('btn-pause-converstation');
+
+        pauseConversationBtn.style.display = 'none';
+        startConversationBtn.style.display = 'flex';            
+    }
+
+    const finishConversation = () => {
+        const feedback = document.getElementById('feedback');
+        const startSessionBtn = document.getElementById('start-session');
+        const greetingText = document.getElementById('greeting');
+
+        const startConversationBtn = document.getElementById('btn-start-converstation');
+        
+        const pauseConversationBtn = document.getElementById('btn-pause-converstation');
+        const finishConversationBtn = document.getElementById('btn-finish-conversation');
+        const startConversation = document.getElementById('start-conversation');        
+
+        startConversationBtn.style.display = 'none';
+        finishConversationBtn.style.display = 'none';
+        pauseConversationBtn.style.display = 'none';
+        startConversation.style.display = 'none';
+        body.style.display = 'none';
+
+        feedback.style.display = 'flex';
+        startSessionBtn.style.display = 'flex';
+        greetingText.style.display = 'flex';
+    }
+
+</script>
