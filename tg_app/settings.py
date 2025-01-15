@@ -28,7 +28,7 @@ SECRET_KEY = "django-insecure-h%5d#qh-m0k73oe4h!a$fi76^oxtyjl-@^!wbab7ug$p^=z1+r
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
+CSRF_TRUSTED_ORIGINS = ['https://*.koyeb.app']
 
 # Application definition
 
