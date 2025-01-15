@@ -306,13 +306,6 @@
 
         }
 
-        .star:hover{
-            background: linear-gradient(180deg, rgba(150, 202, 235, 0.7) 0%, rgba(117, 188, 234, 0.7) 100%);
-            box-shadow: 0px 0px 20px rgba(52, 134, 187, 0.2), inset 0px 0px 5px #5DB3EB;
-            border-radius: 2px;                
-        }
-
-
         .star-active{
             background: linear-gradient(180deg, #96CAEB 0%, #75BCEA 100%);
             box-shadow: 0px 0px 20px rgba(52, 134, 187, 0.2), inset 0px 0px 5px #5DB3EB;
@@ -346,16 +339,46 @@
     </style>
 </head>
 <body>
-    {% include "header.html" %}
-    {% include "conversation.html" %}
-    {% include "feedback.html" %}
-
     <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
     <script>
         window.Telegram.WebApp.setHeaderColor('#FFFFFF');
         window.Telegram.WebApp.setBottomBarColor('#FFFFFF');
         window.Telegram.WebApp.setBackgroundColor('#FFFFFF');
+        let telegram_id;
+        try{
+            requestData = {
+                'tg_id': window.Telegram.WebApp.initDataUnsafe.user.id,
+            }
+        }
+        catch (error){
+            requestData = {
+                'tg_id': 12345,
+            }
+        }
+        fetch(`get_or_create_user?tg_id=${encodeURIComponent(requestData.tg_id)}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        }
+        )
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+
+            
+            return response.json();
+        }).then((data) => {
+            telegram_id = data.telegram_id
+        })
+
     </script>
+    {% include "header.html" %}
+    {% include "conversation.html" %}
+    {% include "feedback.html" %}
+
+
 </body>
 </html>
 

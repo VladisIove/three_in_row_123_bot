@@ -5,8 +5,9 @@ from django.db import transaction
 from django import http
 from django.conf import settings
 from django.forms.models import model_to_dict
-
-from user_core.models import TelegramUser
+import os 
+import json
+from user_core.models import TelegramUser, AIChat as  AIChatModel
 from user_core.integrations.openai.client import ClientOpenAI
 from typing import Any
 from django.http import HttpResponse, JsonResponse
@@ -21,35 +22,84 @@ bot = settings.TELEGRAM_BOT
 class MainPageWebApp(TemplateView):
     template_name = 'index.html'
 
+
+class FeedbackView(View):
+    def post(self, request: http.HttpRequest):
+        chat_id = request.POST.get('chat_id')
+        tg_id = request.POST.get('tg_id')
+        rate = request.POST.get('rate')
+        feedback = request.POST.get('feedback')
+        
+        ai_chat = AIChatModel.objects.filter(id=chat_id, tg_user_id=tg_id).first()
+        if ai_chat:
+            ai_chat.rate = rate 
+            ai_chat.feedback = feedback 
+            ai_chat.save()
+            
+        return HttpResponse('ok')
+
 class AIChat(View):
     @staticmethod
-    def save_to_mp3(bytes_io_object, output_path):
+    def save_to_mp3(bytes_io_object, suffix: str = ''):
+        output_path = f'input_{suffix}.mp3'
         bytes_io_object.seek(0)
 
         # Open the file in binary write mode and save the content
         with open(output_path, "wb") as f:
             f.write(bytes_io_object.read())
+            
         try:
             audio = AudioSegment.from_file(f.name, "mp4")
         except:
             try:
                 audio =  AudioSegment.from_file(f.name, "mp3")
             except: 
-                audio =  AudioSegment.from_file(f.name)
+                try: 
+                    audio = AudioSegment.from_file(f.name, codec="opus")
+                except:
+                    audio =  AudioSegment.from_file(f.name)
                 
-        audio.export('input.ogg', format='ogg')
+        audio.export(f'input_{suffix}.ogg', format='ogg')
+        
+    @staticmethod
+    def _clean(suffix: str = ''):
+        formats = ['mp3', 'ogg']
+        for format in formats:
+            file = f'input_{suffix}.{format}'
+            os.remove(file)
+    
+    @staticmethod
+    def _get_chat_information(chat_id: str, tg_id: str) -> AIChatModel:
+        
+        ai_chat = None    
+        if chat_id:
+            ai_chat = AIChatModel.objects.filter(id=chat_id, tg_user_id=tg_id).first()
+        
+        if not ai_chat: 
+            ai_chat = AIChatModel.objects.create(tg_user = TelegramUser.objects.get(telegram_id=tg_id))
+            ai_chat.save()
+        
+        return ai_chat
+            
         
     def post(self, request: http.HttpRequest):
-        promt = request.POST.get('promt')
-        cache_key = request.POST.get('cache_key')
-        messages = cache.get(cache_key)
-        self.save_to_mp3(request.FILES['audioFile'], 'input.mp3')
-        audio, messages = ClientOpenAI().speech_to_speech_chat(Path(__file__).parent.parent / 'input.ogg', promt, messages)
-        if not cache_key:
-            cache_key = str(uuid4())
-        cache.set(cache_key, messages, timeout=60*60)  # Timeout in seconds
+        chat_id = request.POST.get('chat_id')
+        tg_id = request.POST.get('tg_id')
+        
+        ai_chat = self._get_chat_information(chat_id, tg_id)  
+        suffix = f"{ai_chat.id}_{tg_id}"  
+                
+        self.save_to_mp3(request.FILES['audioFile'], suffix)
+        messages = json.loads(ai_chat.conversation) if ai_chat.conversation else []
+        audio, messages = ClientOpenAI().speech_to_speech_chat(Path(__file__).parent.parent / f'input_{suffix}.ogg', settings.OPENAI_PROMT, messages)
+        
+        ai_chat.conversation = json.dumps(messages)
+        ai_chat.save()
+        
+        self._clean(suffix)
+        
         response = HttpResponse(audio)
-        response['X-CACHE-KEY'] = cache_key
+        response['X-CACHE-KEY'] = ai_chat.id
         return response
 
 class GetOrCreateUser(View):

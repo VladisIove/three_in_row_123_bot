@@ -16,3 +16,15 @@ class TelegramUser(models.Model):
 
     def __str__(self) -> str:
         return str(self.telegram_id)
+    
+
+class AIChat(models.Model):
+    
+    tg_user = models.ForeignKey(to=TelegramUser, on_delete=models.SET_NULL, null=True)
+    rate = models.SmallIntegerField(default=0)
+    feedback = models.TextField(null=True, blank=True)
+    conversation = models.TextField(null=True, blank=True)
+    
+    class Meta:
+        db_table = "telegram_chat" 
+        ordering = ["tg_user", "id"]

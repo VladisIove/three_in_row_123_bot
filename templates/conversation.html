@@ -41,6 +41,12 @@
 </div>
 
 <script>
+
+    let mediaRecorder;
+    let recordedChunks = [];
+    let blob;
+    let chat_id = '';
+
     const startSession = () => {
 
         const startSessionBtn = document.getElementById('start-session');
@@ -59,21 +65,25 @@
         finishConversationBtn.style.display = 'flex';
     }
 
-    const startSay = () => {
+    const startSay = async () => {
         
         const startConversationBtn = document.getElementById('btn-start-converstation');
         const pauseConversationBtn = document.getElementById('btn-pause-converstation');
 
         startConversationBtn.style.display = 'none';            
         pauseConversationBtn.style.display = 'flex';
+
+        await recordingStart();
     }
 
-    const finishSay = () => {
+    const finishSay = async () => {
         const startConversationBtn = document.getElementById('btn-start-converstation');
         const pauseConversationBtn = document.getElementById('btn-pause-converstation');
 
         pauseConversationBtn.style.display = 'none';
-        startConversationBtn.style.display = 'flex';            
+        startConversationBtn.style.display = 'flex';  
+        
+        await recordingStop()
     }
 
     const finishConversation = () => {
@@ -96,6 +106,87 @@
         feedback.style.display = 'flex';
         startSessionBtn.style.display = 'flex';
         greetingText.style.display = 'flex';
+
+        mediaRecorder.stop();
+        recordedChunks = [];
     }
+
+
+    const recordingStart = async ()  => {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.ondataavailable = event => {
+            console.log('test: ', event.data)
+            if (event.data.size > 0) {
+                recordedChunks.push(event.data);
+            }
+        };
+
+        mediaRecorder.onstop = () => {};
+
+        mediaRecorder.start();
+    }
+
+    const recordingStop = async () => {
+
+        return new Promise((resolve, reject) => {
+            mediaRecorder.onstop = async () => {
+
+                const userBlob = new Blob(recordedChunks, { type: recordedChunks[0].type });
+                const formData = new FormData();
+                formData.append('audioFile', new Blob(recordedChunks, { type: recordedChunks[0].type }), 'recording.mp3');
+                formData.append('chat_id', chat_id);
+                try{
+                    formData.append('tg_id', telegram_id )
+                }
+                catch (error){
+                    formData.append('tg_id', 'test')
+                    console.log(error)
+                }
+                
+        
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    body: formData
+                });
+                chat_id = response.headers.get('X-CACHE-KEY')
+                const reader = response.body.getReader();
+                const chunks = [];
+                let done = false;
+        
+                while (!done) {
+                    const { value, done: streamDone } = await reader.read();
+                    if (value) {
+                        chunks.push(value); // Accumulate chunks
+                    }
+                    done = streamDone;
+                }
+        
+                // Handle backend response
+                const responseBlob = new Blob(chunks, { type: 'audio/mp3' });
+                const responseUrl = URL.createObjectURL(responseBlob);
+        
+                const audio = new Audio(responseUrl);
+        
+                // Play the audio
+                audio.play()
+                    .then(() => {
+                        console.log("Audio is playing");
+                    })
+                    .catch(error => {
+                        console.error("Error playing audio:", error);
+                    });
+            
+                // Optional: Cleanup URL after the audio is loaded
+                audio.onended = () => {
+                    URL.revokeObjectURL(responseUrl);
+                };
+                recordedChunks = [];
+            };
+    
+            mediaRecorder.stop(); // Stop recording
+        });
+    };
 
 </script>
