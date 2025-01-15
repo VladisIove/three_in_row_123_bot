@@ -7,7 +7,7 @@ class ChatInline(admin.TabularInline):
     model = AIChat
     extra = 0  
     can_delete = False
-    readonly_fields = ('rate', 'feedback',)
+    readonly_fields = ('rate', 'feedback', 'formatted_conversation')
     fields = ('rate', 'feedback', 'formatted_conversation')
 
     def formatted_conversation(self, instance):
